@@ -495,6 +495,27 @@ int32_t execute(uint32_t program_frame, uint8_t numvars)
             sleep_ms(time * 1000);
             break;
         }
+        case IF: // S,x,y -> S
+        {
+            printf("IF\n");
+            pc++;
+            uint8_t pc_offset = P[pc];
+            pc++;
+            int32_t y = *((int32_t *)pop(S));
+            int32_t x = *((int32_t *)pop(S));
+            if (x == y)
+                pc += (uint32_t)pc_offset - 2;
+            break;
+        }
+        case GOTO: // S -> S
+        {
+            printf("GOTO\n");
+            pc++;
+            uint8_t pc_offset = P[pc];
+            pc++;
+            pc += (uint32_t)pc_offset - 2;
+            break;
+        }
         default:
         {
             printf("ERR: Unknown OpCode: %d\n", P[pc]);

@@ -21,4 +21,6 @@ enum Opcode
     RETURN,  // 12
     CALL,    // 13
     SLEEP,   // 14
+    IF,      // 15
+    GOTO,    // 16
 };
