@@ -495,15 +495,14 @@ int32_t execute(uint32_t program_frame, uint8_t numvars)
             sleep_ms(time * 1000);
             break;
         }
-        case IF: // S,x,y -> S
+        case IF: // S,a -> S
         {
             printf("IF\n");
             pc++;
             uint8_t pc_offset = P[pc];
             pc++;
-            int32_t y = *((int32_t *)pop(S));
-            int32_t x = *((int32_t *)pop(S));
-            if (x == y)
+            int32_t a = *((int32_t *)pop(S));
+            if (a == 1)
                 pc += (uint32_t)pc_offset - 2;
             break;
         }
@@ -514,6 +513,89 @@ int32_t execute(uint32_t program_frame, uint8_t numvars)
             uint8_t pc_offset = P[pc];
             pc++;
             pc += (uint32_t)pc_offset - 2;
+            break;
+        }
+        case NOT: // S,x -> S,!x
+        {
+            printf("NOT\n");
+            void *a = pop(S);
+            int32_t a_val = *((int32_t *)a);
+            a_val = (a_val == 0) ? 1 : 0;
+            *((int32_t *)a) = a_val;
+            push(S, a);
+            break;
+        }
+        case LT: // S,x,y -> x<y BROKEN
+        {
+            void *y = pop(S);
+            int32_t y_val = *((int32_t *)y);
+            free(y);
+            void *x = pop(S);
+            int32_t x_val = *((int32_t *)x);
+            int32_t c = (x_val >= y_val) ? 0 : 1;
+            *((int32_t *)x) = c;
+            printf("LT: %d < %d = %d\n", x_val, y_val, c);
+            push(S, x);
+            break;
+        }
+        case GT: // S,x,y -> x>y
+        {
+            printf("GT\n");
+            void *y = pop(S);
+            int32_t y_val = *((int32_t *)y);
+            free(y);
+            void *x = pop(S);
+            int32_t x_val = *((int32_t *)x);
+            free(x);
+            int32_t c = (x_val <= y_val) ? 0 : 1;
+            int32_t *res = malloc(sizeof(int32_t));
+            *res = c;
+            push(S, (void *)res);
+            break;
+        }
+        case EQ: // S,x,y -> x==y
+        {
+            printf("EQ\n");
+            void *y = pop(S);
+            int32_t y_val = *((int32_t *)y);
+            free(y);
+            void *x = pop(S);
+            int32_t x_val = *((int32_t *)x);
+            free(x);
+            int32_t c = (x_val != y_val) ? 0 : 1;
+            int32_t *res = malloc(sizeof(int32_t));
+            *res = c;
+            push(S, (void *)res);
+            break;
+        }
+        case GTE: // S,x,y -> x>=y
+        {
+            printf("GTE\n");
+            void *y = pop(S);
+            int32_t y_val = *((int32_t *)y);
+            free(y);
+            void *x = pop(S);
+            int32_t x_val = *((int32_t *)x);
+            free(x);
+            int32_t c = (x_val < y_val) ? 0 : 1;
+            int32_t *res = malloc(sizeof(int32_t));
+            *res = c;
+            push(S, (void *)res);
+            break;
+        }
+        case LTE: // S,x,y -> x<=y
+        {
+            printf("LTE\n");
+            void *y = pop(S);
+            int32_t y_val = *((int32_t *)y);
+            free(y);
+            void *x = pop(S);
+            int32_t x_val = *((int32_t *)x);
+            free(x);
+            int32_t c = (x_val > y_val) ? 0 : 1;
+            int32_t *res = malloc(sizeof(int32_t));
+            *res = c;
+            push(S, (void *)res);
             break;
         }
         default:

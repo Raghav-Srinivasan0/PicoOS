@@ -21,6 +21,12 @@ enum Opcode
     RETURN,  // 12
     CALL,    // 13
     SLEEP,   // 14
-    IF,      // 15
-    GOTO,    // 16
+    IF,      // 15 Need to test
+    GOTO,    // 16 Need to test
+    NOT,     // 17 Need to test
+    LT,      // 18 Need to test
+    GT,      // 19 Need to test
+    EQ,      // 1a Need to test
+    LTE,     // 1b Need to test
+    GTE,     // 1c Need to test
 };
